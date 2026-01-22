@@ -9,6 +9,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@remix-run/dev": "^2.15.2"
     "@dazl/color-scheme": "^1.2.1",
     "@hookform/resolvers": "^5.2.2",
     "@react-router/node": "^7.9.6",
