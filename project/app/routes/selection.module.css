@@ -1,0 +1,259 @@
+.selectionScreen {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1920&h=1080&fit=crop');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.settingsButton {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: var(--radius-3);
+  padding: var(--space-3);
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.2s var(--ease-out);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settingsButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  justify-content: center;
+}
+
+.stopWorkOverlay {
+  background: rgba(255, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+  border: 3px solid var(--color-error-8);
+  border-radius: var(--radius-4);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+  width: 100%;
+  max-width: 700px;
+}
+
+.stopWorkMessage {
+  font: var(--font-heading);
+  font-size: var(--font-size-4);
+  color: var(--color-error-11);
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.coffeeInfo {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-4);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+  text-align: center;
+  width: 100%;
+  max-width: 700px;
+}
+
+.coffeeName {
+  font: var(--font-display);
+  color: var(--color-accent-12);
+  margin-bottom: var(--space-3);
+}
+
+.coffeeDescription {
+  font: var(--font-body);
+  color: var(--color-neutral-11);
+  line-height: 1.6;
+}
+
+.portionButtons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+  width: 100%;
+  max-width: 900px;
+}
+
+.portionButtons.disabled {
+  filter: blur(3px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.portionButton {
+  background: rgba(255, 255, 255, 0.95);
+  border: 3px solid var(--color-accent-6);
+  border-radius: var(--radius-3);
+  padding: var(--space-6);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  text-align: center;
+}
+
+.portionButton:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-accent-9);
+  box-shadow: var(--shadow-3);
+  background: rgba(255, 255, 255, 1);
+}
+
+.portionButton:active {
+  transform: translateY(-2px);
+}
+
+.portionButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.portionSize {
+  font: var(--font-heading);
+  color: var(--color-accent-11);
+  margin-bottom: var(--space-3);
+  text-transform: uppercase;
+}
+
+.portionPrice {
+  font: var(--font-display);
+  color: var(--color-accent-12);
+  font-size: var(--font-size-fluid-3);
+}
+
+.portionVolume {
+  font: var(--font-caption);
+  color: var(--color-neutral-10);
+  margin-top: var(--space-2);
+}
+
+.pinOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+}
+
+.pinDialog {
+  background: white;
+  border-radius: var(--radius-4);
+  padding: var(--space-7);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-4);
+}
+
+.pinTitle {
+  font: var(--font-heading);
+  color: var(--color-neutral-12);
+  margin-bottom: var(--space-5);
+}
+
+.pinInput {
+  width: 100%;
+  padding: var(--space-4);
+  font: var(--font-subheading);
+  text-align: center;
+  border: 2px solid var(--color-neutral-6);
+  border-radius: var(--radius-3);
+  margin-bottom: var(--space-4);
+  font-size: var(--font-size-4);
+  letter-spacing: 0.5em;
+}
+
+.pinInput:focus {
+  outline: none;
+  border-color: var(--color-accent-8);
+}
+
+.pinInputError {
+  border-color: var(--color-error-8);
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.pinErrorMessage {
+  color: var(--color-error-10);
+  font: var(--font-caption);
+  margin-bottom: var(--space-4);
+}
+
+.pinButtons {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.pinBackButton,
+.pinSubmitButton {
+  flex: 1;
+  padding: var(--space-4);
+  font: var(--font-subheading);
+  border: none;
+  border-radius: var(--radius-3);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+}
+
+.pinBackButton {
+  background: var(--color-neutral-4);
+  color: var(--color-neutral-11);
+}
+
+.pinBackButton:hover {
+  background: var(--color-neutral-5);
+}
+
+.pinSubmitButton {
+  background: var(--color-accent-9);
+  color: var(--color-accent-contrast);
+}
+
+.pinSubmitButton:hover:not(:disabled) {
+  background: var(--color-accent-10);
+}
+
+.pinSubmitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .portionButtons {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+}

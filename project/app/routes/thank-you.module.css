@@ -1,0 +1,88 @@
+.thankYouScreen {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1920&h=1080&fit=crop');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.thankYouCard {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-4);
+  padding: var(--space-8);
+  text-align: center;
+  width: 100%;
+  box-shadow: var(--shadow-4);
+  animation: fadeInScale 0.5s var(--ease-out);
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.successIcon {
+  color: var(--color-success-9);
+  margin-bottom: var(--space-5);
+  animation: checkmarkDraw 0.8s var(--ease-out);
+}
+
+@keyframes checkmarkDraw {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.thankYouTitle {
+  font: var(--font-display);
+  color: var(--color-accent-12);
+  margin-bottom: var(--space-4);
+}
+
+.thankYouMessage {
+  font: var(--font-heading);
+  color: var(--color-neutral-11);
+  margin-bottom: var(--space-6);
+  line-height: 1.6;
+}
+
+.farewell {
+  font: var(--font-subheading);
+  color: var(--color-neutral-10);
+}

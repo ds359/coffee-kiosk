@@ -1,0 +1,24 @@
+{
+  "name": "Self-Service Coffee Kiosk",
+  "short_name": "Coffee Kiosk",
+  "description": "Self-service coffee kiosk application",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#1a1a1a",
+  "theme_color": "#8b4513",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "coffeedose-controller",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc"
+  },
+  "dependencies": {
+    "@dazl/color-scheme": "^1.2.1",
+    "@hookform/resolvers": "^5.2.2",
+    "@react-router/node": "^7.9.6",
+    "@react-router/serve": "^7.9.6",
+    "classnames": "^2.5.1",
+    "cmdk": "^1.1.1",
+    "embla-carousel-react": "^8.6.0",
+    "input-otp": "^1.4.2",
+    "isbot": "^5.1.32",
+    "lucide-react": "^0.554.0",
+    "radix-ui": "^1.4.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-hook-form": "^7.66.1",
+    "react-resizable-panels": "^3.0.6",
+    "react-router": "^7.9.6",
+    "recharts": "^3.4.1",
+    "sonner": "^2.0.7",
+    "vaul": "^1.1.2",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@dazl-lib/radix-ui": "^0.1.0",
+    "@dazl/dev": "^1.4.0",
+    "@react-router/dev": "^7.9.6",
+    "@types/node": "22",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "endOfLine": "auto"
+  },
+  "overrides": {
+    "@radix-ui/react-primitive": "2.1.3"
+  }
+}

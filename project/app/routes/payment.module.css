@@ -1,0 +1,154 @@
+.paymentScreen {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1920&h=1080&fit=crop');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.paymentCard {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-4);
+  padding: var(--space-7);
+  text-align: center;
+  width: 100%;
+  box-shadow: var(--shadow-4);
+}
+
+.paymentTitle {
+  font: var(--font-display);
+  color: var(--color-accent-12);
+  margin-bottom: var(--space-6);
+}
+
+.paymentMethods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.nfcSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.nfcIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nfcText {
+  font: var(--font-subheading);
+  color: var(--color-neutral-11);
+  margin: 0;
+}
+
+.nfcFrame {
+  border: 3px dashed var(--color-accent-8);
+  border-radius: var(--radius-3);
+  padding: var(--space-6) var(--space-8);
+  background: var(--color-accent-2);
+  width: 100%;
+  max-width: 300px;
+}
+
+.nfcFrameInner {
+  font: var(--font-heading);
+  color: var(--color-accent-11);
+  font-size: var(--font-size-4);
+  letter-spacing: 0.1em;
+}
+
+.divider {
+  font: var(--font-subheading);
+  color: var(--color-neutral-8);
+  position: relative;
+  text-align: center;
+  margin: var(--space-4) 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: calc(50% - 30px);
+  height: 1px;
+  background: var(--color-neutral-6);
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+.qrSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.qrText {
+  font: var(--font-subheading);
+  color: var(--color-neutral-11);
+  margin: 0;
+}
+
+.qrCode {
+  background: white;
+  padding: var(--space-4);
+  border-radius: var(--radius-3);
+  border: 2px solid var(--color-neutral-5);
+  display: inline-flex;
+}
+
+.nextButton {
+  width: 100%;
+  padding: var(--space-4);
+  font: var(--font-subheading);
+  background: var(--color-neutral-6);
+  color: var(--color-neutral-11);
+  border: none;
+  border-radius: var(--radius-3);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  margin-top: var(--space-4);
+}
+
+.nextButton:hover {
+  background: var(--color-neutral-7);
+}
+
+.nextButton:active {
+  transform: scale(0.98);
+}

@@ -1,0 +1,103 @@
+.dosingScreen {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1920&h=1080&fit=crop');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.dosingCard {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-4);
+  padding: var(--space-7);
+  text-align: center;
+  width: 100%;
+  box-shadow: var(--shadow-4);
+}
+
+.dosingTitle {
+  font: var(--font-display);
+  color: var(--color-accent-12);
+  margin-bottom: var(--space-5);
+}
+
+.animationContainer {
+  margin: var(--space-6) 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.coffeeIcon {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.progressContainer {
+  width: 100%;
+  margin-top: var(--space-6);
+}
+
+.progressLabel {
+  font: var(--font-subheading);
+  color: var(--color-neutral-11);
+  margin-bottom: var(--space-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progressBar {
+  width: 100%;
+  height: 24px;
+  background: var(--color-neutral-3);
+  border-radius: var(--radius-round);
+  overflow: hidden;
+  box-shadow: var(--inner-shadow-1);
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent-9), var(--color-accent-10));
+  border-radius: var(--radius-round);
+  transition: width 0.3s var(--ease-out);
+}
+
+.statusMessage {
+  font: var(--font-body);
+  color: var(--color-neutral-10);
+  margin-top: var(--space-4);
+}
