@@ -1,12 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "build/client",
-  "installCommand": "npm install --legacy-peer-deps",
+  "public": true,
+  "name": "coffeedose-controller",
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
