@@ -1,12 +1,6 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/remix-builder",
-      "config": {
-        "installCommand": "npm install --legacy-peer-deps"
-      }
-    }
-  ]
+  "buildCommand": "npm run build",
+  "outputDirectory": "build/client",
+  "installCommand": "npm install --legacy-peer-deps"
 }
