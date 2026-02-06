@@ -20,7 +20,9 @@ import {
   CheckCircle,
   Save,
   Filter,
+  RefreshCw,
 } from "lucide-react";
+import { useArduino } from "../hooks/use-arduino";
 import styles from "./settings.module.css";
 
 type ServiceView =
@@ -123,6 +125,28 @@ export default function ServiceMenuScreen() {
   });
 
   const [logFilter, setLogFilter] = useState<LogEntry["type"] | "all">("all");
+
+  // Arduino connection hook
+  const arduino = useArduino();
+  
+  // Arduino settings state (always initialized)
+  const connectionStatus: 'online' | 'offline' = arduino.isConnected ? 'online' : 'offline';
+  const [coeff, setCoeff] = useState(() => parseFloat(localStorage.getItem('arduinoCoeff') || '2.02'));
+  const [power, setPower] = useState(() => parseInt(localStorage.getItem('arduinoPower') || '60'));
+  const [volume, setVolume] = useState(() => parseFloat(localStorage.getItem('arduinoVolume') || '3.0'));
+  const [waiting, setWaiting] = useState(() => parseInt(localStorage.getItem('arduinoWaiting') || '3'));
+  const [displayEnabled, setDisplayEnabled] = useState(() => localStorage.getItem('arduinoDisplayEnabled') !== 'false');
+  const [firmwareVersion] = useState('1.11.2.2334');
+  const [lastUpdate] = useState('01.01.2025');
+  
+  // Calibration dialog state
+  const [calibrationDialogOpen, setCalibrationDialogOpen] = useState(false);
+  const [countedImpulses, setCountedImpulses] = useState<number | null>(null);
+  const [realVolume, setRealVolume] = useState<number>(0);
+  const [calibrationStarted, setCalibrationStarted] = useState(false);
+  
+  // Connection settings dialog state
+  const [connectionDialogOpen, setConnectionDialogOpen] = useState(false);
 
   const addLog = (type: LogEntry["type"], message: string) => {
     const newLog: LogEntry = {
@@ -608,25 +632,359 @@ export default function ServiceMenuScreen() {
     );
   }
 
+  // Arduino Settings handlers
+  const handleSaveArduinoSettings = () => {
+    localStorage.setItem('arduinoCoeff', coeff.toString());
+    localStorage.setItem('arduinoPower', power.toString());
+    localStorage.setItem('arduinoVolume', volume.toString());
+    localStorage.setItem('arduinoWaiting', waiting.toString());
+    localStorage.setItem('arduinoDisplayEnabled', displayEnabled.toString());
+    addLog('settings', 'Arduino settings updated');
+    setView('settings');
+  };
+
+  const handleCalibration = () => {
+    setCalibrationDialogOpen(true);
+    setCountedImpulses(null);
+    setRealVolume(0);
+    setCalibrationStarted(false);
+    addLog('settings', 'Calibration dialog opened');
+  };
+  
+  const handleStartCalibration = () => {
+    setCalibrationStarted(true);
+    // Simulate Arduino counting impulses - in real implementation this will come from Arduino
+    setTimeout(() => {
+      setCountedImpulses(250); // Example value
+      addLog('settings', 'Calibration completed: 250 impulses counted');
+    }, 2000);
+  };
+  
+  const handleSaveCalibration = () => {
+    if (countedImpulses && realVolume > 0) {
+      const newCoeff = countedImpulses / realVolume;
+      setCoeff(parseFloat(newCoeff.toFixed(2)));
+      localStorage.setItem('arduinoCoeff', newCoeff.toFixed(2));
+      addLog('settings', `Calibration saved: coeff = ${newCoeff.toFixed(2)} (${countedImpulses} impulses / ${realVolume} ml)`);
+      setCalibrationDialogOpen(false);
+    }
+  };
+
+  const handleTest = () => {
+    addLog('settings', `Power test started at ${power}%`);
+  };
+  
+  const handlePowerChange = (delta: number) => {
+    setPower(prev => Math.min(100, Math.max(30, prev + delta)));
+  };
+
+  const handleConnectionSettings = () => {
+    setConnectionDialogOpen(true);
+    arduino.scanPorts(); // Scan when opening dialog
+    addLog('settings', 'Connection settings dialog opened');
+  };
+  
+  const handleConnectToDevice = async (port: any) => {
+    try {
+      await arduino.connectToPort(port);
+      addLog('settings', 'Connected to Arduino device');
+      setConnectionDialogOpen(false);
+    } catch (err) {
+      addLog('error', `Failed to connect: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    }
+  };
+  
+  const handleRequestNewPort = async () => {
+    try {
+      await arduino.connect(); // This will show the browser's device picker
+      addLog('settings', 'New Arduino device connected');
+      setConnectionDialogOpen(false);
+    } catch (err) {
+      addLog('error', `Failed to connect: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    }
+  };
+
+  const handleUpdateFirmware = () => {
+    addLog('settings', 'Firmware update initiated');
+  };
+
+  const handleResetArduino = () => {
+    if (confirm('Are you sure you want to reset Arduino settings to defaults?')) {
+      setCoeff(2.02);
+      setPower(60);
+      setVolume(3.0);
+      setWaiting(3);
+      setDisplayEnabled(true);
+      addLog('settings', 'Arduino settings reset to defaults');
+    }
+  };
+
   // Arduino Settings View
   if (view === "arduino-settings") {
+
     return (
       <div className={styles.serviceScreen}>
-        <div className={styles.subHeader}>
+        <div className={styles.arduinoHeader}>
           <button className={styles.backButton} onClick={handleBack}>
             <ArrowLeft size={24} />
             <span>Back</span>
           </button>
-          <h2 className={styles.subTitle}>Arduino Settings</h2>
+          <button className={styles.saveButton} onClick={handleSaveArduinoSettings}>
+            <Save size={24} />
+            <span>Save</span>
+          </button>
         </div>
 
-        <div className={styles.formContent}>
-          <div className={styles.infoBox}>
-            <Cpu size={48} />
-            <p>Arduino controller settings will be configured here.</p>
-            <p className={styles.muted}>Coming soon...</p>
+        <div className={styles.arduinoContent}>
+          <div className={styles.statusIndicator}>
+            <span className={`${styles.statusDot} ${connectionStatus === 'online' ? styles.online : styles.offline}`} />
+            <span className={styles.statusText}>{connectionStatus === 'online' ? 'Online' : 'Offline'}</span>
           </div>
+
+          <button className={styles.connectionButton} onClick={handleConnectionSettings}>
+            Connection settings
+          </button>
+
+          <h2 className={styles.parametersTitle}>Parameters</h2>
+
+          <div className={styles.paramGroup}>
+            <label className={styles.paramLabel}>Coeff:</label>
+            <div className={styles.paramRow}>
+              <input
+                type="number"
+                step="0.01"
+                value={coeff}
+                onChange={(e) => setCoeff(parseFloat(e.target.value) || 0)}
+                className={styles.paramInput}
+              />
+              <button className={styles.calibrationButton} onClick={handleCalibration}>
+                Calibration
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.paramGroup}>
+            <label className={styles.paramLabel}>Power:</label>
+            <div className={styles.paramRow}>
+              <div className={styles.powerControl}>
+                <button className={styles.powerButton} onClick={() => handlePowerChange(-1)}>
+                  <Minus size={20} />
+                </button>
+                <div className={styles.powerValue}>{power}%</div>
+                <button className={styles.powerButton} onClick={() => handlePowerChange(1)}>
+                  <Plus size={20} />
+                </button>
+              </div>
+              <button className={styles.testButton} onClick={handleTest}>
+                Test
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.paramGroupRow}>
+            <div className={styles.paramGroupSmall}>
+              <label className={styles.paramLabel}>Volume:</label>
+              <div className={styles.paramInputWrapper}>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={volume}
+                  onChange={(e) => setVolume(parseFloat(e.target.value) || 0)}
+                  className={styles.paramInputSmall}
+                />
+                <span className={styles.paramUnit}>L</span>
+              </div>
+            </div>
+
+            <div className={styles.paramGroupSmall}>
+              <label className={styles.paramLabel}>Waiting:</label>
+              <div className={styles.paramInputWrapper}>
+                <input
+                  type="number"
+                  value={waiting}
+                  onChange={(e) => setWaiting(parseInt(e.target.value) || 0)}
+                  className={styles.paramInputSmall}
+                />
+                <span className={styles.paramUnit}>sec</span>
+              </div>
+            </div>
+          </div>
+
+          <label className={styles.displayToggle}>
+            <input
+              type="checkbox"
+              checked={displayEnabled}
+              onChange={(e) => setDisplayEnabled(e.target.checked)}
+              className={styles.checkbox}
+            />
+            <span>Display</span>
+          </label>
+
+          <button className={styles.updateButton} onClick={handleUpdateFirmware}>
+            Update firmware
+          </button>
+
+          <div className={styles.firmwareInfo}>
+            <p className={styles.firmwareText}>Current version: {firmwareVersion}</p>
+            <p className={styles.firmwareText}>Last update: {lastUpdate}</p>
+          </div>
+
+          <button className={styles.resetButton} onClick={handleResetArduino}>
+            Reset
+          </button>
         </div>
+        
+        {/* Calibration Dialog */}
+        {calibrationDialogOpen && (
+          <div className={styles.dialogOverlay} onClick={() => setCalibrationDialogOpen(false)}>
+            <div className={styles.dialogBox} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.dialogHeader}>
+                <h3>Calibration</h3>
+                <button className={styles.closeButton} onClick={() => setCalibrationDialogOpen(false)}>
+                  <X size={24} />
+                </button>
+              </div>
+              
+              <div className={styles.dialogContent}>
+                {!calibrationStarted ? (
+                  <button className={styles.primaryButton} onClick={handleStartCalibration}>
+                    Start Calibration
+                  </button>
+                ) : (
+                  <>
+                    <div className={styles.formGroup}>
+                      <label>Counted Impulses</label>
+                      <input
+                        type="text"
+                        value={countedImpulses !== null ? countedImpulses : 'Counting...'}
+                        readOnly
+                        className={styles.input}
+                      />
+                    </div>
+                    
+                    <div className={styles.formGroup}>
+                      <label>Real Volume (ml)</label>
+                      <div className={styles.volumeInput}>
+                        <button
+                          className={styles.volumeButton}
+                          onClick={() => setRealVolume(Math.max(0, realVolume - 1))}
+                          disabled={!countedImpulses}
+                        >
+                          <Minus size={20} />
+                        </button>
+                        <input
+                          type="number"
+                          step="1"
+                          value={realVolume}
+                          onChange={(e) => setRealVolume(parseInt(e.target.value) || 0)}
+                          className={styles.input}
+                          disabled={!countedImpulses}
+                        />
+                        <button
+                          className={styles.volumeButton}
+                          onClick={() => setRealVolume(realVolume + 1)}
+                          disabled={!countedImpulses}
+                        >
+                          <Plus size={20} />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {countedImpulses && realVolume > 0 && (
+                      <div className={styles.calculatedCoeff}>
+                        New coefficient: {(countedImpulses / realVolume).toFixed(2)}
+                      </div>
+                    )}
+                    
+                    <button 
+                      className={styles.primaryButton} 
+                      onClick={handleSaveCalibration}
+                      disabled={!countedImpulses || realVolume <= 0}
+                    >
+                      <Save size={24} />
+                      <span>Save</span>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Connection Settings Dialog */}
+        {connectionDialogOpen && (
+          <div className={styles.dialogOverlay} onClick={() => setConnectionDialogOpen(false)}>
+            <div className={styles.dialogBox} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.dialogHeader}>
+                <h3>Connection Settings</h3>
+                <button className={styles.closeButton} onClick={() => setConnectionDialogOpen(false)}>
+                  <X size={24} />
+                </button>
+              </div>
+              
+              <div className={styles.dialogContent}>
+                <div className={styles.formGroup}>
+                  <div className={styles.deviceListHeader}>
+                    <label>Available Devices</label>
+                    <button 
+                      className={styles.refreshButton} 
+                      onClick={arduino.scanPorts}
+                      title="Scan for devices"
+                    >
+                      <RefreshCw size={18} />
+                    </button>
+                  </div>
+                  
+                  {!arduino.isSupported ? (
+                    <div className={styles.warningMessage}>
+                      Web Serial API is not supported in this browser. Please use Chrome, Edge, or Opera.
+                    </div>
+                  ) : arduino.error ? (
+                    <div className={styles.errorMessage}>
+                      {arduino.error}
+                    </div>
+                  ) : arduino.availablePorts.length === 0 ? (
+                    <div className={styles.emptyDeviceList}>
+                      <Cpu size={32} className={styles.emptyIcon} />
+                      <p>No serial devices found</p>
+                      <p className={styles.emptyHint}>Connect your Arduino via USB and click refresh</p>
+                    </div>
+                  ) : (
+                    <div className={styles.deviceList}>
+                      {arduino.availablePorts.map((portInfo) => (
+                        <div key={portInfo.id} className={styles.deviceItem}>
+                          <Cpu size={20} />
+                          <span>{portInfo.name}</span>
+                          <button 
+                            className={styles.connectButton}
+                            onClick={() => handleConnectToDevice(portInfo.port)}
+                          >
+                            Connect
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                
+                <button 
+                  className={styles.primaryButton} 
+                  onClick={handleRequestNewPort}
+                  disabled={!arduino.isSupported}
+                >
+                  <Plus size={20} />
+                  <span>Add New Device</span>
+                </button>
+                
+                <p className={styles.infoText}>
+                  {arduino.availablePorts.length > 0 
+                    ? 'Select a device from the list above or add a new device to establish connection with Arduino.'
+                    : 'Click "Add New Device" to select your Arduino from the browser\'s device picker.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

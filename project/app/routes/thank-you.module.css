@@ -55,6 +55,12 @@
   animation: checkmarkDraw 0.8s var(--ease-out);
 }
 
+.errorIcon {
+  color: var(--color-error-9);
+  margin-bottom: var(--space-5);
+  animation: checkmarkDraw 0.8s var(--ease-out);
+}
+
 @keyframes checkmarkDraw {
   0% {
     opacity: 0;

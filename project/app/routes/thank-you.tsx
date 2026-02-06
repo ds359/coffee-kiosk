@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
-import { CheckCircle } from "lucide-react";
+import { useNavigate, useLocation } from "react-router";
+import { CheckCircle, AlertCircle } from "lucide-react";
 import styles from "./thank-you.module.css";
 
 export default function ThankYou() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const success = location.state?.success !== false; // Default to success
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -19,15 +21,25 @@ export default function ThankYou() {
       <div className={styles.overlay} />
       <div className={styles.content}>
         <div className={styles.thankYouCard}>
-          <div className={styles.successIcon}>
-            <CheckCircle size={100} strokeWidth={2} />
+          <div className={success ? styles.successIcon : styles.errorIcon}>
+            {success ? (
+              <CheckCircle size={100} strokeWidth={2} />
+            ) : (
+              <AlertCircle size={100} strokeWidth={2} />
+            )}
           </div>
-          <h1 className={styles.thankYouTitle}>Thank You!</h1>
+          <h1 className={styles.thankYouTitle}>
+            {success ? 'Thank You!' : 'Oops!'}
+          </h1>
           <p className={styles.thankYouMessage}>
-            Your coffee is ready. Please collect it from the dispenser.
+            {success 
+              ? 'Your coffee is ready. Please collect it from the dispenser.'
+              : 'Something went wrong during preparation. Please contact staff.'}
           </p>
           <p className={styles.farewell}>
-            Enjoy your premium coffee experience!
+            {success 
+              ? 'Enjoy your premium coffee experience!'
+              : 'We apologize for the inconvenience.'}
           </p>
         </div>
       </div>

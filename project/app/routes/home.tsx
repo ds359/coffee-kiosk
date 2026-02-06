@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import { ArduinoController } from "~/components/arduino-controller";
+import type { ArduinoMessage } from "~/hooks/use-arduino";
 import styles from "./home.module.css";
 
 export default function Home() {
@@ -21,8 +23,28 @@ export default function Home() {
     navigate("/selection");
   };
 
+  const handleArduinoMessage = (message: ArduinoMessage) => {
+    console.log('Arduino message received:', message);
+    
+    // Handle coin insertion
+    if (message.type === 'coin') {
+      const amount = parseFloat(message.data);
+      console.log(`Coin inserted: ${amount}`);
+      // Navigate to selection when money is inserted
+      navigate("/selection");
+    }
+    
+    // Handle button press
+    if (message.type === 'button') {
+      console.log(`Button pressed: ${message.data}`);
+      // You can implement direct coffee selection here
+    }
+  };
+
   return (
-    <div className={styles.welcomeScreen} onClick={handleClick}>
+    <>
+      <ArduinoController onMessage={handleArduinoMessage} />
+      <div className={styles.welcomeScreen} onClick={handleClick}>
       <div className={styles.welcomeContent}>
         <img src={coffeeImage} alt="Coffee" className={styles.welcomeImage} />
         <h1 className={styles.welcomeTitle}>Welcome</h1>
@@ -30,5 +52,6 @@ export default function Home() {
         <p className={styles.tapPrompt}>Tap to start</p>
       </div>
     </div>
+    </>
   );
 }
