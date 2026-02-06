@@ -2,14 +2,14 @@
   "name": "coffeedose-controller",
   "private": true,
   "type": "module",
+
   "scripts": {
-    "build": "react-router build",
-    "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
+
   "dependencies": {
-    "@remix-run/dev": "^2.15.2",
     "@dazl/color-scheme": "^1.2.1",
     "@hookform/resolvers": "^5.2.2",
     "@react-router/node": "^7.9.6",
@@ -31,6 +31,7 @@
     "vaul": "^1.1.2",
     "zod": "^4.1.12"
   },
+
   "devDependencies": {
     "@dazl-lib/radix-ui": "^0.1.0",
     "@dazl/dev": "^1.4.0",
@@ -42,10 +43,12 @@
     "vite": "^7.2.4",
     "vite-tsconfig-paths": "^5.1.4"
   },
+
   "prettier": {
     "printWidth": 120,
     "endOfLine": "auto"
   },
+
   "overrides": {
     "@radix-ui/react-primitive": "2.1.3"
   }
