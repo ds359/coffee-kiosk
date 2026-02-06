@@ -1,6 +1,12 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/remix-builder",
+      "config": {
+        "installCommand": "npm install --legacy-peer-deps"
+      }
+    }
   ]
 }
