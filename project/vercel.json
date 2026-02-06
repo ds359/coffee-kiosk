@@ -1,7 +1,4 @@
 {
-  "version": 2,
-  "public": true,
-  "name": "coffeedose-controller",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
