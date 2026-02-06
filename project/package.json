@@ -10,6 +10,12 @@
 },
 
   "dependencies": {
+    "vite": "^7.2.4",
+    "vite-tsconfig-paths": "^5.1.4",
+    "@react-router/dev": "^7.9.6",
+    "typescript": "~5.9.3",
+    "@dazl/dev": "^1.4.0",
+    "@dazl-lib/radix-ui": "^0.1.0",
     "@dazl/color-scheme": "^1.2.1",
     "@hookform/resolvers": "^5.2.2",
     "@react-router/node": "^7.9.6",
